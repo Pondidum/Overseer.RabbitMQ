@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Text;
 using RabbitMQ.Client.Events;
 
 namespace Overseer.RabbitMQ
@@ -14,10 +14,14 @@ namespace Overseer.RabbitMQ
 				return null;
 			}
 
+			var headers = message.BasicProperties.Headers;
+			var body = message.Body;
+			var json = Encoding.UTF8.GetString(body);
+
 			return new Message
 			{
-				Headers = new Dictionary<string, object>(),
-				Body = new object()
+				Headers = headers,
+				Body = json
 			};
 		}
 	}
