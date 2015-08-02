@@ -1,0 +1,9 @@
+{
+	"id": { "_usage": "required", "_type": "guid", "_expression": "" },
+	"name": { "_usage": "required", "_type": "string", "_expression": "$[A-z]{2}^" },
+	"address": {
+		"line1": { "_usage": "required" },
+		"postcode": {"_usage": "required"},
+		"_usage": "optional",
+	}
+}
