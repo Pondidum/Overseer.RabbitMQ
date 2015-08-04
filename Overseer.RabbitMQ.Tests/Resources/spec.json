@@ -1,9 +1,23 @@
 {
-	"id": { "_usage": "required", "_type": "guid", "_expression": "" },
-	"name": { "_usage": "required", "_type": "string", "_expression": "$[A-z]{2}^" },
-	"address": {
-		"line1": { "_usage": "required" },
-		"postcode": {"_usage": "required"},
-		"_usage": "optional",
-	}
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "nope",
+
+    "definitions": {
+        "address": {
+            "type": "object",
+            "properties": {
+                "Line1": { "type": "string" },
+                "PostCode": { "type": "string" }
+            },
+            "required": [ "PostCode" ]
+        }
+    },
+
+    "type": "object",
+    "properties": {
+        "ID": { "type": "string" },
+        "Name": { "type": "string" },
+        "Addresses": { "type": "array", "items": { "$ref": "#/definitions/address" } }
+    },
+    "required": [ "ID", "Name", "Addresses" ]
 }

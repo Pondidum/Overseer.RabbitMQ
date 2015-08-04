@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Threading;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Overseer.RabbitMQ.Tests
@@ -15,7 +16,28 @@ namespace Overseer.RabbitMQ.Tests
 		[Fact]
 		public void When_testing_something()
 		{
+			var wait = new AutoResetEvent(false);
 
+			var converter = new RabbitMessageConverter();
+			var rabbit = new RabbitMessageReader("192.168.59.103", "DomainEvents");
+			rabbit.Start(m =>
+			{
+				_output.WriteLine(converter.Convert(m).Body);
+				wait.Set();
+			});
+
+			var publisher = new Publisher("192.168.59.103", "DomainEvents");
+
+			publisher.Send("candidate.created", new DomainMessage { Action = "Testing" } );
+
+			wait.WaitOne();
+			rabbit.Stop();
+		}
+
+		public class DomainMessage
+		{
+			public string Action { get; set; }
 		}
 	}
+
 }
