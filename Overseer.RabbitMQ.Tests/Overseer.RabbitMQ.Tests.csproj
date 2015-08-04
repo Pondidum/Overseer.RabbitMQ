@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Publisher.cs" />
     <Compile Include="Resources\TestObject.cs" />
     <Compile Include="Scratchpad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

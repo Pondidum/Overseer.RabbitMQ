@@ -6,20 +6,19 @@ namespace Overseer.RabbitMQ
 {
 	public class RabbitMessageReader : IMessageReader
 	{
-		private readonly string _exchange;
+		private readonly RabbitOptions _options;
 		private readonly IModel _channel;
-		private readonly QueueDeclareOk _queueName;
+		private QueueDeclareOk _queueName;
 		private Action _unhook;
 
-		public RabbitMessageReader(string hostName, string exchangeName)
+		public RabbitMessageReader(RabbitOptions options)
 		{
-			_exchange = exchangeName;
+			_options = options;
 
-			var factory = new ConnectionFactory { HostName = hostName };
+			var factory = new ConnectionFactory { HostName = options.HostName };
 			var connection = factory.CreateConnection();
 
 			_channel = connection.CreateModel();
-			_queueName = _channel.QueueDeclare();
 		}
 
 		public void Start(Action<object> onMessage)
@@ -29,17 +28,16 @@ namespace Overseer.RabbitMQ
 			consumer.Received += handler;
 			_unhook = () => consumer.Received -= handler;
 
-			_channel.ExchangeDeclare(_exchange, ExchangeType.Topic);
+			_channel.ExchangeDeclare(_options.ExchangeName, ExchangeType.Topic, _options.ExchangeDurable, _options.ExchangeAutoDelete, null);
+			_queueName = _channel.QueueDeclare();
 
-			var queueName = _channel.QueueDeclare();
-
-			_channel.QueueBind(queueName, _exchange, "#");	// # = all
-			_channel.BasicConsume(queueName, false, consumer);
+			_channel.QueueBind(_queueName, _options.ExchangeName, _options.RoutingKey);	// # = all
+			_channel.BasicConsume(_queueName, false, consumer);
 		}
 
 		public void Stop()
 		{
-			_channel.QueueUnbind(_queueName, _exchange, "#", null);
+			_channel.QueueUnbind(_queueName, _options.ExchangeName, _options.RoutingKey, null);
 			_unhook();
 		}
 	}

@@ -19,7 +19,12 @@ namespace Overseer.RabbitMQ.Tests
 			var wait = new AutoResetEvent(false);
 
 			var converter = new RabbitMessageConverter();
-			var rabbit = new RabbitMessageReader("192.168.59.103", "DomainEvents");
+			var rabbit = new RabbitMessageReader(new RabbitOptions
+			{
+				HostName = "192.168.59.103",
+				ExchangeName = "DomainEvents"
+			});
+
 			rabbit.Start(m =>
 			{
 				_output.WriteLine(converter.Convert(m).Body);
@@ -28,7 +33,7 @@ namespace Overseer.RabbitMQ.Tests
 
 			var publisher = new Publisher("192.168.59.103", "DomainEvents");
 
-			publisher.Send("candidate.created", new DomainMessage { Action = "Testing" } );
+			publisher.Send("candidate.created", new DomainMessage { Action = "Testing" });
 
 			wait.WaitOne();
 			rabbit.Stop();
