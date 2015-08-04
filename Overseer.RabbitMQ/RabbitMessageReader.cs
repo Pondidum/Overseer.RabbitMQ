@@ -4,20 +4,20 @@ using RabbitMQ.Client.Events;
 
 namespace Overseer.RabbitMQ
 {
-	public class MessageReader : IMessageReader
+	public class RabbitMessageReader : IMessageReader
 	{
 		private readonly string _exchange;
 		private readonly IModel _channel;
 		private readonly QueueDeclareOk _queueName;
 		private Action _unhook;
 
-		public MessageReader(string hostName, string exchangeName)
+		public RabbitMessageReader(string hostName, string exchangeName)
 		{
 			_exchange = exchangeName;
 
 			var factory = new ConnectionFactory { HostName = hostName };
 			var connection = factory.CreateConnection();
-			
+
 			_channel = connection.CreateModel();
 			_channel.ExchangeDeclare(_exchange, ExchangeType.Topic, false, true, null);
 
