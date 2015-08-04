@@ -3,7 +3,7 @@ using RabbitMQ.Client.Events;
 
 namespace Overseer.RabbitMQ
 {
-	public class MessageConverter : IMessageConverter
+	public class RabbitMessageConverter : IMessageConverter
 	{
 		public Message Convert(object input)
 		{
