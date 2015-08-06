@@ -70,12 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Publisher.cs" />
-    <Compile Include="Resources\TestObject.cs" />
     <Compile Include="Scratchpad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\spec.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
