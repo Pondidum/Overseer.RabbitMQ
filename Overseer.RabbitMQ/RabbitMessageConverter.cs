@@ -31,6 +31,14 @@ namespace Overseer.RabbitMQ
 					g => g.Name,
 					g => g.GetValue(message.BasicProperties));
 
+			if (message.BasicProperties.IsHeadersPresent())
+			{
+				foreach (var pair in message.BasicProperties.Headers)
+				{
+					headers.Add(pair.Key, pair.Value);
+				}
+			}
+
 			var body = message.Body ?? new byte[0];
 			var json = Encoding.UTF8.GetString(body);
 
@@ -67,6 +75,9 @@ namespace Overseer.RabbitMQ
 					});
 				}
 			}
+
+			//remove custom cases
+			headers.RemoveAll(g => g.Name == "Headers");
 
 			return headers;
 		}

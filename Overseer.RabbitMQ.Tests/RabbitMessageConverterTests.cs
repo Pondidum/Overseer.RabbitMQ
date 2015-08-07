@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Framing;
 using Shouldly;
@@ -36,6 +37,17 @@ namespace Overseer.RabbitMQ.Tests
 			var result = _converter.Convert(_message);
 
 			result.Headers.ShouldNotContainKey("CorrelationId");
+		}
+
+		[Fact]
+		public void When_there_is_a_custom_header()
+		{
+			_message.BasicProperties.Headers = new Dictionary<string, object> { { "test", "test-value" } };
+
+			var result = _converter.Convert(_message);
+
+			result.Headers.ShouldContainKey("test");
+			result.Headers.Count.ShouldBe(1);
 		}
 	}
 }
