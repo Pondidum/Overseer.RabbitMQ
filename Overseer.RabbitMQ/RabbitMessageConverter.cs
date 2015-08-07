@@ -9,6 +9,13 @@ namespace Overseer.RabbitMQ
 {
 	public class RabbitMessageConverter : IMessageConverter
 	{
+		private readonly IEnumerable<Getter> _headerMapper;
+
+		public RabbitMessageConverter()
+		{
+			_headerMapper = BuildHeaderMapper();
+		}
+
 		public Message Convert(object input)
 		{
 			var message = input as BasicDeliverEventArgs;
@@ -18,7 +25,11 @@ namespace Overseer.RabbitMQ
 				return null;
 			}
 
-			var headers = ConvertHeaders(message.BasicProperties);
+			var headers = _headerMapper
+				.Where(g => g.HasValue(message.BasicProperties))
+				.ToDictionary(
+					g => g.Name,
+					g => g.GetValue(message.BasicProperties));
 
 			var body = message.Body ?? new byte[0];
 			var json = Encoding.UTF8.GetString(body);
@@ -30,27 +41,41 @@ namespace Overseer.RabbitMQ
 			};
 		}
 
-		private Dictionary<string, object> ConvertHeaders(IBasicProperties properties)
+		private static IEnumerable<Getter> BuildHeaderMapper()
 		{
-			var type = properties.GetType();
+			var type = typeof (IBasicProperties);
 			var methods = type.GetMethods();
 
-			var headers = new Dictionary<string, object>();
+			var headers = new List<Getter>();
 
 			foreach (var property in type.GetProperties())
 			{
-				var check = methods.FirstOrDefault(m => m.Name == "Is" + property.Name + "Present");
+				var checkMethod = methods.FirstOrDefault(m => m.Name == "Is" + property.Name + "Present");
 
-				if (check != null)
+				if (checkMethod != null)
 				{
-					if ((bool) check.Invoke(properties, Type.EmptyTypes))
+					var getMethod = property.GetGetMethod();
+
+					Func<object, bool> check = input => (bool) checkMethod.Invoke(input, Type.EmptyTypes);
+					Func<object, object> get = input => getMethod.Invoke(input, Type.EmptyTypes);
+
+					headers.Add(new Getter
 					{
-						headers[property.Name] = property.GetGetMethod().Invoke(properties, Type.EmptyTypes);
-					}
+						Name = property.Name,
+						HasValue = check,
+						GetValue = get
+					});
 				}
 			}
 
 			return headers;
+		}
+
+		private struct Getter
+		{
+			public string Name;
+			public Func<object, bool> HasValue;
+			public Func<object, object> GetValue;
 		}
 	}
 }
