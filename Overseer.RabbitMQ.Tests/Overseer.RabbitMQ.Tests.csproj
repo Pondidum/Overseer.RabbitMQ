@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Publisher.cs" />
+    <Compile Include="RabbitMessageConverterTests.cs" />
     <Compile Include="Scratchpad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

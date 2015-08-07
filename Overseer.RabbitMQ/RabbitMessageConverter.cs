@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using RabbitMQ.Client.Events;
 
 namespace Overseer.RabbitMQ
@@ -14,8 +15,15 @@ namespace Overseer.RabbitMQ
 				return null;
 			}
 
-			var headers = message.BasicProperties.Headers;
-			var body = message.Body;
+			var headers = new Dictionary<string, object>();
+
+			if (message.BasicProperties.IsCorrelationIdPresent())
+			{
+				headers["CorrelationId"] = message.BasicProperties.CorrelationId;
+			}
+
+			
+			var body = message.Body ?? new byte[0];
 			var json = Encoding.UTF8.GetString(body);
 
 			return new Message
