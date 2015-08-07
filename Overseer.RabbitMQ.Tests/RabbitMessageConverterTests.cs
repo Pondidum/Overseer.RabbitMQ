@@ -33,9 +33,6 @@ namespace Overseer.RabbitMQ.Tests
 		[Fact]
 		public void When_there_isnt_a_correlation_id()
 		{
-			//var correlationId = Guid.NewGuid().ToString();
-			//_message.BasicProperties.CorrelationId = correlationId;
-
 			var result = _converter.Convert(_message);
 
 			result.Headers.ShouldNotContainKey("CorrelationId");
