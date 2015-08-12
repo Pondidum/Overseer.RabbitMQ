@@ -22,8 +22,6 @@ desc 'Restore nuget packages for all projects'
 nugets_restore :restore do |n|
   n.exe = tool_nuget
   n.out = 'packages'
-
-  n.parameters << %W[-configFile nuget.config]
 end
 
 desc 'Set the assembly version number'
@@ -46,6 +44,7 @@ desc 'Run all unit test assemblies'
 test_runner :test do |xunit|
 
   files = FileList['**.Tests/bin/*/*.{acceptance,tests}.dll']
+  files.exclude(/.*RabbitMQ.*/) if ci_run
 
   xunit.exe = tool_xunit
   xunit.files = files
