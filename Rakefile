@@ -10,7 +10,7 @@ ci_run = ENV['APPVEYOR'] || false
 tool_nuget = 'tools/nuget/nuget.exe'
 tool_xunit = 'tools/xunit/xunit.console.exe'
 
-project_name = 'Overseer'
+project_name = 'Overseer.RabbitMQ'
 project_version = read_semver
 
 project_output = 'build/bin'
@@ -22,6 +22,8 @@ desc 'Restore nuget packages for all projects'
 nugets_restore :restore do |n|
   n.exe = tool_nuget
   n.out = 'packages'
+
+  n.parameters << %W[-configFile nuget.config]
 end
 
 desc 'Set the assembly version number'

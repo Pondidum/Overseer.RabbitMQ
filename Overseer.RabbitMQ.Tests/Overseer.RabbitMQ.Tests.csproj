@@ -40,6 +40,10 @@
       <HintPath>..\packages\Newtonsoft.Json.Schema.1.0.9\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Overseer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Overseer.1.0.0\lib\net40\Overseer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RabbitMQ.Client, Version=3.5.4.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
       <HintPath>..\packages\RabbitMQ.Client.3.5.4\lib\net40\RabbitMQ.Client.dll</HintPath>
       <Private>True</Private>
@@ -82,10 +86,6 @@
     <ProjectReference Include="..\Overseer.RabbitMQ\Overseer.RabbitMQ.csproj">
       <Project>{7cb32050-0141-49d3-863c-1df5e5d6409d}</Project>
       <Name>Overseer.RabbitMQ</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Overseer\Overseer.csproj">
-      <Project>{8bc0c472-1d89-40db-bd4c-c951cb1e3524}</Project>
-      <Name>Overseer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
