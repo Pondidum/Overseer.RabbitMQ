@@ -22,7 +22,9 @@ namespace Overseer.RabbitMQ.Tests
 			var rabbit = new RabbitMessageReader(new RabbitOptions
 			{
 				HostName = "192.168.59.103",
-				ExchangeName = "DomainEvents"
+				ExchangeName = "DomainEvents",
+				ExchangeAutoDelete = true,
+				ExchangeDurable = false
 			});
 
 			rabbit.Start(m =>

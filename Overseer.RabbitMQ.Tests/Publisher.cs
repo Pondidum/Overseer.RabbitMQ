@@ -23,12 +23,8 @@ namespace Overseer.RabbitMQ.Tests
 			using (var connection = _connectionFactory.CreateConnection())
 			using (var channel = connection.CreateModel())
 			{
-				channel.ExchangeDeclare(_exchange, ExchangeType.Topic);
-
-				IBasicProperties basicProperties = channel.CreateBasicProperties();
-
+				var basicProperties = channel.CreateBasicProperties();
 				channel.BasicPublish(_exchange, topic, basicProperties, body);
-
 			}
 		}
 	}
