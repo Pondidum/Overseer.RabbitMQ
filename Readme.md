@@ -44,9 +44,9 @@ options.RoutingKey = "People.*";
 ```
 
 ### ExchangeDurable
-Whether the exchange is durable.  Defaults to `false`.
+Whether the exchange is durable (e.g. will surivive a RabbitMQ restart).  Defaults to `true`.
 ```csharp
-options.ExchangeDurable = false;
+options.ExchangeDurable = true;
 ```
 
 ### ExchangeAutoDelete
