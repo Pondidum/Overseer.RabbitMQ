@@ -26,9 +26,19 @@ namespace Overseer.RabbitMQ
 			var handler = new EventHandler<BasicDeliverEventArgs>((o, e) => onMessage(e));
 			var consumer = new EventingBasicConsumer(_channel);
 			consumer.Received += handler;
+
 			_unhook = () => consumer.Received -= handler;
 
-			_channel.ExchangeDeclare(_options.ExchangeName, ExchangeType.Topic, _options.ExchangeDurable, _options.ExchangeAutoDelete, null);
+			if (_options.ExchangeSkipDeclare)
+			{
+				_channel.ExchangeDeclare(
+					_options.ExchangeName,
+					ExchangeType.Topic,
+					_options.ExchangeDurable,
+					_options.ExchangeAutoDelete,
+					null);
+			}
+
 			_queueName = _channel.QueueDeclare();
 
 			_channel.QueueBind(_queueName, _options.ExchangeName, _options.RoutingKey);	// # = all

@@ -7,6 +7,7 @@ namespace Overseer.RabbitMQ
 
 		public bool ExchangeDurable { get; set; }
 		public bool ExchangeAutoDelete { get; set; }
+		public bool ExchangeSkipDeclare { get; set; }
 
 		public string RoutingKey { get; set; }
 
@@ -14,6 +15,8 @@ namespace Overseer.RabbitMQ
 		{
 			ExchangeDurable = false;
 			ExchangeAutoDelete = false;
+			ExchangeSkipDeclare = false;
+
 			RoutingKey = "#";
 		}
 	}
