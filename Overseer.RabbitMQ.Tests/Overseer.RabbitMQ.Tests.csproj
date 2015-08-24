@@ -41,7 +41,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Overseer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Overseer.2.1.1\lib\net40\Overseer.dll</HintPath>
+      <HintPath>..\packages\Overseer.2.1.2\lib\net40\Overseer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RabbitMQ.Client, Version=3.5.4.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
