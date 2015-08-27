@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Headers.cs" />
     <Compile Include="RabbitMessageReader.cs" />
     <Compile Include="RabbitMessageConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
