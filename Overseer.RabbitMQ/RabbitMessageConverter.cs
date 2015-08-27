@@ -44,6 +44,7 @@ namespace Overseer.RabbitMQ
 
 			return new Message
 			{
+				Type = message.BasicProperties.Type,
 				Headers = headers,
 				Body = json
 			};
@@ -51,7 +52,7 @@ namespace Overseer.RabbitMQ
 
 		private static IEnumerable<Getter> BuildHeaderMapper()
 		{
-			var type = typeof (IBasicProperties);
+			var type = typeof(IBasicProperties);
 			var methods = type.GetMethods();
 
 			var headers = new List<Getter>();
@@ -64,7 +65,7 @@ namespace Overseer.RabbitMQ
 				{
 					var getMethod = property.GetGetMethod();
 
-					Func<object, bool> check = input => (bool) checkMethod.Invoke(input, Type.EmptyTypes);
+					Func<object, bool> check = input => (bool)checkMethod.Invoke(input, Type.EmptyTypes);
 					Func<object, object> get = input => getMethod.Invoke(input, Type.EmptyTypes);
 
 					headers.Add(new Getter

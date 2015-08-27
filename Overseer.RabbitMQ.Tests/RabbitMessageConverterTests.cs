@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Framing;
 using Shouldly;
@@ -48,6 +49,27 @@ namespace Overseer.RabbitMQ.Tests
 
 			result.Headers.ShouldContainKey("test");
 			result.Headers.Count.ShouldBe(1);
+		}
+
+		[Fact]
+		public void The_body_gets_mapped()
+		{
+			var body = "Some Body Text!";
+			_message.Body = Encoding.UTF8.GetBytes(body);
+
+			var result = _converter.Convert(_message);
+
+			result.Body.ShouldBe(body);
+		}
+
+		[Fact]
+		public void The_message_type_gets_mapped()
+		{
+			_message.BasicProperties.Type = "CandidateCreatedEvent";
+
+			var result = _converter.Convert(_message);
+
+			result.Type.ShouldBe("CandidateCreatedEvent");
 		}
 	}
 }
