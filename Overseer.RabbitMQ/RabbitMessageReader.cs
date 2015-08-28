@@ -4,10 +4,13 @@ using RabbitMQ.Client.Events;
 
 namespace Overseer.RabbitMQ
 {
-	public class RabbitMessageReader : IMessageReader
+	public class RabbitMessageReader : IMessageReader, IDisposable
 	{
 		private readonly RabbitOptions _options;
-		private readonly IModel _channel;
+		private readonly ConnectionFactory _factory;
+
+		private IModel _channel;
+		private IConnection _connection;
 		private QueueDeclareOk _queueName;
 
 		private Action _unhook;
@@ -17,15 +20,16 @@ namespace Overseer.RabbitMQ
 		{
 			_options = options;
 
-			var factory = new ConnectionFactory { HostName = options.HostName };
-			var connection = factory.CreateConnection();
-
-			_channel = connection.CreateModel();
+			_factory = new ConnectionFactory { HostName = options.HostName };
 		}
 
 		public void Start(Action<object> onMessage)
 		{
 			Stop();
+
+			_connection = _factory.CreateConnection();
+			_channel = _connection.CreateModel();
+
 			DeclareExchangeIfRequired();
 
 			var consumer = CreateConsumer(onMessage);
@@ -43,7 +47,11 @@ namespace Overseer.RabbitMQ
 			if (_unhook == null)
 				return;
 
+
 			_channel.QueueUnbind(_queueName, _options.ExchangeName, _options.RoutingKey, null);
+			_channel.Dispose();
+			_connection.Dispose();
+
 			_unhook();
 
 			_hook = null;
@@ -72,6 +80,11 @@ namespace Overseer.RabbitMQ
 			_unhook = () => consumer.Received -= handler;
 
 			return consumer;
+		}
+
+		public void Dispose()
+		{
+			Stop();
 		}
 	}
 }
